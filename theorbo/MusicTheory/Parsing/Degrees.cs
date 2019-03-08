@@ -68,10 +68,11 @@ namespace theorbo.MusicTheory.Parsing
             .Select(parser => AccidentalWithChordKindAndDegree(DegreeWithChordKind(parser)))
             .Aggregate((p1, p2) => p1.Or(p2));
         
-        private static Parser<ValueTuple<int,KnownChordKind>> JazzDegreeInversion = 
+        //Matches degree inversion at the end, like '/V' in I7/V
+        private static readonly Parser<ValueTuple<int,KnownChordKind>> JazzDegreeInversion = 
             ScaleDegrees.Select(s => Parse.String("/"+s.Key).Select(v => s.Value)).Aggregate((p1, p2) => p1.Or(p2));
         
-        //Matches scale with chord extensions
+        //Resulting parser - matches scale with chord extensions
         public static Parser<ParsedDegree> DegreePraser =
             from degree in BaseDegreePraser
             from ext in ChordExtensions.ExtensionParser.Optional()
