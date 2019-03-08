@@ -97,7 +97,7 @@ namespace theorbo.tests
                         new ChordExtensions.Extension(3,Accidental.Flat, ChordExtensions.Extension.ExtensionKind.Add),
                         new ChordExtensions.Extension(5,Accidental.Flat, ChordExtensions.Extension.ExtensionKind.Add),
                     }, Tuple.Create(5,KnownChordKind.Min)),
-                ["bi5#11-3b5/V"] = new Degrees.ParsedDegree(Accidental.Flat,
+                ["bi5#11-3omitb5/V"] = new Degrees.ParsedDegree(Accidental.Flat,
                     1,
                     KnownChordKind.Min,
                     ChordExtensions.ExtensionBase.Powerchord, 
@@ -105,7 +105,7 @@ namespace theorbo.tests
                     {
                         new ChordExtensions.Extension(11,Accidental.Sharp, ChordExtensions.Extension.ExtensionKind.Add),
                         new ChordExtensions.Extension(3,Accidental.Flat, ChordExtensions.Extension.ExtensionKind.Add),
-                        new ChordExtensions.Extension(5,Accidental.Flat, ChordExtensions.Extension.ExtensionKind.Add),
+                        new ChordExtensions.Extension(5,Accidental.Flat, ChordExtensions.Extension.ExtensionKind.Omit),
                     }, Tuple.Create(5,KnownChordKind.Maj))
             };
             
@@ -118,6 +118,55 @@ namespace theorbo.tests
                 Assert.That(degree.WasSuccessful, Is.True, $"Parsing of `{item.Key}` failed: {degree.Message}");
                 Assert.That(degree.Remainder.AtEnd, Is.True, $"Parsing of `{item.Key}` didnt consume all input");
                 Assert.That(degree.Value, Is.EqualTo(item.Value),$"`{item.Key}` misparsed: {degree.Value} != {item.Value}");
+            }
+
+        }      
+        
+        [Test]
+        public void ShouldParseChords()
+        {
+            var testData = new Dictionary<string, Chords.ParsedChord>
+            {
+                ["Bbmaj7"] = new Chords.ParsedChord(NoteValue.B, Accidental.Flat, KnownChordKind.Maj, ChordExtensions.ExtensionBase.Maj7, new ChordExtensions.Extension[0], null),
+                ["Bbmaj7/9"] = new Chords.ParsedChord(NoteValue.B,
+                    Accidental.Flat,
+                    KnownChordKind.Maj,
+                    ChordExtensions.ExtensionBase.Maj7,
+                    new[]
+                    {
+                        new ChordExtensions.Extension(9,
+                            Accidental.None,
+                            ChordExtensions.Extension.ExtensionKind.Add),
+                    },
+                    null),
+                ["A#7/F"] = new Chords.ParsedChord(NoteValue.A,
+                    Accidental.Sharp,
+                    KnownChordKind.Maj,
+                    new ChordExtensions.ExtensionBase(7,false,true), 
+                    new ChordExtensions.Extension[0], 
+                    Tuple.Create(NoteValue.F, Accidental.None)),
+                ["Ebm5#13-3omitb5/F#"] = new Chords.ParsedChord(NoteValue.E,
+                    Accidental.Flat,
+                    KnownChordKind.Min,
+                    ChordExtensions.ExtensionBase.Powerchord,
+                    new[]
+                    {
+                        new ChordExtensions.Extension(13,Accidental.Sharp, ChordExtensions.Extension.ExtensionKind.Add),
+                        new ChordExtensions.Extension(3,Accidental.Flat, ChordExtensions.Extension.ExtensionKind.Add),
+                        new ChordExtensions.Extension(5,Accidental.Flat, ChordExtensions.Extension.ExtensionKind.Omit),
+                    },
+                    Tuple.Create(NoteValue.F, Accidental.Sharp)),
+            };
+            
+            //Parse all valid degree notation cases 
+
+            foreach (var item in testData)
+            {
+                var chord =  Chords.ChordPraser.TryParse(item.Key);
+                
+                Assert.That(chord.WasSuccessful, Is.True, $"Parsing of `{item.Key}` failed: {chord.Message}");
+                Assert.That(chord.Remainder.AtEnd, Is.True, $"Parsing of `{item.Key}` didnt consume all input");
+                Assert.That(chord.Value, Is.EqualTo(item.Value),$"`{item.Key}` misparsed: {chord.Value} != {item.Value}");
             }
 
         }
