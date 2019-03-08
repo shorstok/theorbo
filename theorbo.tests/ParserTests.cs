@@ -86,7 +86,27 @@ namespace theorbo.tests
                         new ChordExtensions.Extension(13,Accidental.Sharp, ChordExtensions.Extension.ExtensionKind.Add),
                         new ChordExtensions.Extension(5,Accidental.Sharp, ChordExtensions.Extension.ExtensionKind.Add),
                         new ChordExtensions.Extension(5,Accidental.Flat, ChordExtensions.Extension.ExtensionKind.Add),
-                    })
+                    }),                    
+                ["#iM13#13-3b5/v"] = new Degrees.ParsedDegree(Accidental.Sharp,
+                    1,
+                    KnownChordKind.Maj,
+                    new ChordExtensions.ExtensionBase(13,false,true), 
+                    new[]
+                    {
+                        new ChordExtensions.Extension(13,Accidental.Sharp, ChordExtensions.Extension.ExtensionKind.Add),
+                        new ChordExtensions.Extension(3,Accidental.Flat, ChordExtensions.Extension.ExtensionKind.Add),
+                        new ChordExtensions.Extension(5,Accidental.Flat, ChordExtensions.Extension.ExtensionKind.Add),
+                    }, Tuple.Create(5,KnownChordKind.Min)),
+                ["bi5#11-3b5/V"] = new Degrees.ParsedDegree(Accidental.Flat,
+                    1,
+                    KnownChordKind.Min,
+                    ChordExtensions.ExtensionBase.Powerchord, 
+                    new[]
+                    {
+                        new ChordExtensions.Extension(11,Accidental.Sharp, ChordExtensions.Extension.ExtensionKind.Add),
+                        new ChordExtensions.Extension(3,Accidental.Flat, ChordExtensions.Extension.ExtensionKind.Add),
+                        new ChordExtensions.Extension(5,Accidental.Flat, ChordExtensions.Extension.ExtensionKind.Add),
+                    }, Tuple.Create(5,KnownChordKind.Maj))
             };
             
             //Parse all valid degree notation cases 

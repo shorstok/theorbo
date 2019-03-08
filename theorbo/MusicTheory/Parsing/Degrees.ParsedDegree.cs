@@ -15,7 +15,9 @@ namespace theorbo.MusicTheory.Parsing
                        Degree == other.Degree &&
                        DegreeChordKind == other.DegreeChordKind &&
                        BaseExtension.Equals(other.BaseExtension) &&
-                       Extensions?.SequenceEqual(other.Extensions) == true;
+                       (Extensions?.SequenceEqual(other.Extensions) ?? ReferenceEquals(Extensions,other.Extensions)) &&
+                       Equals(JazzChordInversion,
+                           other.JazzChordInversion);
             }
 
             public override bool Equals(object obj)
@@ -33,6 +35,7 @@ namespace theorbo.MusicTheory.Parsing
                     hashCode = (hashCode * 397) ^ (int) DegreeChordKind;
                     hashCode = (hashCode * 397) ^ BaseExtension.GetHashCode();
                     hashCode = (hashCode * 397) ^ (Extensions != null ? Extensions.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (JazzChordInversion != null ? JazzChordInversion.GetHashCode() : 0);
                     return hashCode;
                 }
             }
@@ -51,13 +54,15 @@ namespace theorbo.MusicTheory.Parsing
                 int degree,
                 KnownChordKind degreeChordKind,
                 ChordExtensions.ExtensionBase baseExtension,
-                IEnumerable<ChordExtensions.Extension> extensions)
+                IEnumerable<ChordExtensions.Extension> extensions,
+                Tuple<int, KnownChordKind> jazzChordInversion= null)
             {
                 Accidental = accidental;
                 Degree = degree;
                 DegreeChordKind = degreeChordKind;
                 BaseExtension = baseExtension;
                 Extensions = extensions;
+                JazzChordInversion = jazzChordInversion;
             }
 
             public Accidental Accidental { get; }
@@ -65,6 +70,7 @@ namespace theorbo.MusicTheory.Parsing
             public KnownChordKind DegreeChordKind { get; }
             public ChordExtensions.ExtensionBase BaseExtension { get; }
             public IEnumerable<ChordExtensions.Extension> Extensions { get; }
+            public Tuple<int, KnownChordKind> JazzChordInversion { get; }
 
             public override string ToString()
             {
@@ -72,7 +78,8 @@ namespace theorbo.MusicTheory.Parsing
                        $"{nameof(Degree)}: {Degree}; " +
                        $"{nameof(DegreeChordKind)}: {DegreeChordKind}; " +
                        $"{nameof(BaseExtension)}: {BaseExtension}; " +
-                       $"{nameof(Extensions)}: {string.Join(", ",Extensions)}";
+                       $"{nameof(Extensions)}: {string.Join(", ",Extensions)}"+
+                       $"{(JazzChordInversion!=null ? "/"+JazzChordInversion.Item1+JazzChordInversion.Item2 : String.Empty)}";
             }
         }
 

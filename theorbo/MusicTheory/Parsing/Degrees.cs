@@ -34,8 +34,8 @@ namespace theorbo.MusicTheory.Parsing
                 ["i"] = (1, KnownChordKind.Min)
             };
 
-        private static readonly IEnumerable<Parser<ValueTuple<int, KnownChordKind>>> RomanNumeralParsers = ScaleDegrees
-            .Select(s => Parse.String(s.Key).Select(v => s.Value));
+        private static readonly IEnumerable<Parser<ValueTuple<int, KnownChordKind>>> RomanNumeralParsers = ScaleDegrees.          
+            Select(s => Parse.String(s.Key).Select(v => s.Value));
 
         private static readonly IEnumerable<Parser<ValueTuple<int, KnownChordKind>>> ArabicNumeralParsers = Enumerable
             .Range(1, 8)
@@ -67,11 +67,15 @@ namespace theorbo.MusicTheory.Parsing
             .Concat(ArabicNumeralParsers)
             .Select(parser => AccidentalWithChordKindAndDegree(DegreeWithChordKind(parser)))
             .Aggregate((p1, p2) => p1.Or(p2));
-
+        
+        private static Parser<ValueTuple<int,KnownChordKind>> JazzDegreeInversion = 
+            ScaleDegrees.Select(s => Parse.String("/"+s.Key).Select(v => s.Value)).Aggregate((p1, p2) => p1.Or(p2));
+        
         //Matches scale with chord extensions
         public static Parser<ParsedDegree> DegreePraser =
             from degree in BaseDegreePraser
             from ext in ChordExtensions.ExtensionParser.Optional()
+            from jd in  JazzDegreeInversion.Optional() 
             select new ParsedDegree(degree.Item1,
                 degree.Item2,
                 degree.Item3,
@@ -80,7 +84,8 @@ namespace theorbo.MusicTheory.Parsing
                     : ext.Get().Item1,
                 ext.IsEmpty
                     ? new List<ChordExtensions.Extension>()
-                    : ext.Get().Item2);
+                    : ext.Get().Item2,
+                jd.IsEmpty? null : jd.Get().ToTuple());
 
 
 

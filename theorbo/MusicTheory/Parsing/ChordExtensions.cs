@@ -23,7 +23,7 @@ namespace theorbo.MusicTheory.Parsing
                 .XOr(Parse.String("-").Or(Parse.String("b")).Select(s => Accidental.Flat));
 
         private static readonly Parser<Extension.ExtensionKind> ActionTypeParser =
-            Parse.String("add").Or(Parse.String("/").Then(v=>Parse.Digit.AtLeastOnce().Preview().Select(s=>s.Get()))).      //'add9' or case when '/9' for adding chord extension
+            Parse.String("add").Or(Parse.String("/").Then(v=>Parse.Digit.AtLeastOnce().Preview().Select(s=>s.GetOrDefault()))).      //'add9' or case when '/9' for adding chord extension
                 Select(s => Extension.ExtensionKind.Add)
                 .XOr(Parse.String("omit").Select(s => Extension.ExtensionKind.Omit));
 
