@@ -84,6 +84,7 @@
     <Compile Include="MusicTheory\Parsing\Alterations.cs" />
     <Compile Include="MusicTheory\Parsing\ChordExtensions.cs" />
     <Compile Include="MusicTheory\Parsing\Degrees.cs" />
+    <Compile Include="MusicTheory\Parsing\Degrees.ParsedDegree.cs" />
     <Compile Include="MusicTheory\ScaleHelper.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>

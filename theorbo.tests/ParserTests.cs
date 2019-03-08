@@ -42,7 +42,7 @@ namespace theorbo.tests
             {
                 var degree =  Degrees.BaseDegreePraser.TryParse(item.Key);
                 
-                Assert.That(degree.WasSuccessful && degree.Remainder.AtEnd, Is.True, $"Parsing of `{item}` failed: {degree.Message}");
+                Assert.That(degree.WasSuccessful && degree.Remainder.AtEnd, Is.True, $"Parsing of `{item.Key}` failed: {degree.Message}");
                 Assert.That(degree.Value, Is.EqualTo(item.Value),$"`{item.Key}` misparsed: {degree.Value} != {item.Value}");
             }
 
@@ -54,6 +54,52 @@ namespace theorbo.tests
 
                 Assert.That(degree.WasSuccessful && degree.Remainder.AtEnd, Is.False, $"Parsing of `{item}` succeeded but had to fail. Got {degree}");
             }
+        }
+
+        [Test]
+        public void ShouldParseDegreesWithExtensions()
+        {
+            var testData = new Dictionary<string, Degrees.ParsedDegree>
+            {
+                ["bVmaj7"] = new Degrees.ParsedDegree(Accidental.Flat, 5, KnownChordKind.Maj, ChordExtensions.ExtensionBase.Maj7, new List<ChordExtensions.Extension>()),
+                ["III5"] = new Degrees.ParsedDegree(Accidental.None, 3, KnownChordKind.Maj, ChordExtensions.ExtensionBase.Powerchord, new List<ChordExtensions.Extension>()),
+                ["bVmaj7/9"] = new Degrees.ParsedDegree(Accidental.Flat, 5, KnownChordKind.Maj, ChordExtensions.ExtensionBase.Maj7,new[]
+                {
+                    new ChordExtensions.Extension(9,Accidental.None, ChordExtensions.Extension.ExtensionKind.Add),
+                }),
+                ["#ivmaj"] = new Degrees.ParsedDegree(Accidental.Sharp, 4, KnownChordKind.Min, ChordExtensions.ExtensionBase.Maj7, new List<ChordExtensions.Extension>()),
+                ["#IVm(b9)add13"] = new Degrees.ParsedDegree(Accidental.Sharp,
+                    4,
+                    KnownChordKind.Min,
+                    ChordExtensions.ExtensionBase.Default,
+                    new[]
+                    {
+                        new ChordExtensions.Extension(9,Accidental.Flat, ChordExtensions.Extension.ExtensionKind.Add),
+                        new ChordExtensions.Extension(13,Accidental.None, ChordExtensions.Extension.ExtensionKind.Add),
+                    }),
+                ["biiM9#13+5b5"] = new Degrees.ParsedDegree(Accidental.Flat,
+                    2,
+                    KnownChordKind.Maj,
+                    new ChordExtensions.ExtensionBase(9,false,true), 
+                    new[]
+                    {
+                        new ChordExtensions.Extension(13,Accidental.Sharp, ChordExtensions.Extension.ExtensionKind.Add),
+                        new ChordExtensions.Extension(5,Accidental.Sharp, ChordExtensions.Extension.ExtensionKind.Add),
+                        new ChordExtensions.Extension(5,Accidental.Flat, ChordExtensions.Extension.ExtensionKind.Add),
+                    })
+            };
+            
+            //Parse all valid degree notation cases 
+
+            foreach (var item in testData)
+            {
+                var degree =  Degrees.DegreePraser.TryParse(item.Key);
+                
+                Assert.That(degree.WasSuccessful, Is.True, $"Parsing of `{item.Key}` failed: {degree.Message}");
+                Assert.That(degree.Remainder.AtEnd, Is.True, $"Parsing of `{item.Key}` didnt consume all input");
+                Assert.That(degree.Value, Is.EqualTo(item.Value),$"`{item.Key}` misparsed: {degree.Value} != {item.Value}");
+            }
+
         }
     }
 }

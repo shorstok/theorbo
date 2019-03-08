@@ -34,7 +34,7 @@ namespace theorbo.MusicTheory.Parsing
 
         internal static readonly Parser<KnownChordKind> ChordKindParser = KnownChordKinds
             .OrderByDescending(s => s.Key.Length)
-            .Select(s => Parse.String(s.Key).Select(v => s.Value)).Aggregate((a, b) => a.Or(b));
+            .Select(s => Parse.String(s.Key).Except(ChordExtensions.MajParser).Select(v => s.Value)).Aggregate((a, b) => a.Or(b));
 
         internal static readonly Parser<Accidental> AccidentalParser = Accidentals
             .OrderByDescending(s => s.Key.Length)

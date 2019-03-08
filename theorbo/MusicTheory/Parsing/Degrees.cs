@@ -7,7 +7,7 @@ using theorbo.MusicTheory.Domain;
 
 namespace theorbo.MusicTheory.Parsing
 {
-    public static class Degrees
+    public static partial class Degrees
     {
         public static Dictionary<string, ValueTuple<int, KnownChordKind>> ScaleDegrees =
             new Dictionary<string, ValueTuple<int, KnownChordKind>>
@@ -43,12 +43,6 @@ namespace theorbo.MusicTheory.Parsing
                 Parse.String(deg.ToString(CultureInfo.InvariantCulture))
                     .Select(v => ValueTuple.Create(deg, KnownChordKind.Maj)));
 
-        //Matches scale degree without chord extensions
-        public static Parser<ValueTuple<Accidental, int, KnownChordKind>> BaseDegreePraser = RomanNumeralParsers
-            .Concat(ArabicNumeralParsers)
-            .Select(parser => AccidentalWithChordKindAndDegree(DegreeWithChordKind(parser)))
-            .Aggregate((p1, p2) => p1.Or(p2));
-
         //Optionally take into account chord kinds (as, `m` for minor in 1m)
         private static Parser<ValueTuple<int, KnownChordKind>> DegreeWithChordKind(
             Parser<ValueTuple<int, KnownChordKind>> source)
@@ -67,5 +61,28 @@ namespace theorbo.MusicTheory.Parsing
                 select ValueTuple.Create(accidental.IsEmpty ? Accidental.None : accidental.Get(), scaleDegree.Item1,
                     scaleDegree.Item2);
         }
+
+        //Matches scale degree without chord extensions
+        public static Parser<ValueTuple<Accidental, int, KnownChordKind>> BaseDegreePraser = RomanNumeralParsers
+            .Concat(ArabicNumeralParsers)
+            .Select(parser => AccidentalWithChordKindAndDegree(DegreeWithChordKind(parser)))
+            .Aggregate((p1, p2) => p1.Or(p2));
+
+        //Matches scale with chord extensions
+        public static Parser<ParsedDegree> DegreePraser =
+            from degree in BaseDegreePraser
+            from ext in ChordExtensions.ExtensionParser.Optional()
+            select new ParsedDegree(degree.Item1,
+                degree.Item2,
+                degree.Item3,
+                ext.IsEmpty
+                    ? ChordExtensions.ExtensionBase.Default
+                    : ext.Get().Item1,
+                ext.IsEmpty
+                    ? new List<ChordExtensions.Extension>()
+                    : ext.Get().Item2);
+
+
+
     }
 }
