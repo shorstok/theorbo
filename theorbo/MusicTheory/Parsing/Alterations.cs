@@ -23,6 +23,7 @@ namespace theorbo.MusicTheory.Parsing
             ["minor"] = KnownChordKind.Min,
             ["M"] = KnownChordKind.Maj,
             ["-"] = KnownChordKind.Min,
+            ["+"] = KnownChordKind.Aug,
             ["aug"] = KnownChordKind.Aug,
             ["dim"] = KnownChordKind.Dim,
             ["lyd"] = KnownChordKind.Lyd,

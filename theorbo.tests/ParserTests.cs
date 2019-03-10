@@ -63,6 +63,14 @@ namespace theorbo.tests
             {
                 ["bVmaj7"] = new Degrees.ParsedDegree(Accidental.Flat, 5, KnownChordKind.Maj, ChordExtensions.ExtensionBase.Maj7, new List<ChordExtensions.Extension>()),
                 ["III5"] = new Degrees.ParsedDegree(Accidental.None, 3, KnownChordKind.Maj, ChordExtensions.ExtensionBase.Powerchord, new List<ChordExtensions.Extension>()),
+                ["I+-6"] = new Degrees.ParsedDegree(Accidental.None, 1, KnownChordKind.Aug, ChordExtensions.ExtensionBase.Default, new[]
+                        {
+                            new ChordExtensions.Extension(6,Accidental.Flat, ChordExtensions.Extension.ExtensionKind.Add),
+                        }),
+                ["Idim+11"] = new Degrees.ParsedDegree(Accidental.None, 1, KnownChordKind.Dim, ChordExtensions.ExtensionBase.Default, new[]
+                        {
+                            new ChordExtensions.Extension(11,Accidental.Sharp, ChordExtensions.Extension.ExtensionKind.Add),
+                        }),
                 ["bVmaj7/9"] = new Degrees.ParsedDegree(Accidental.Flat, 5, KnownChordKind.Maj, ChordExtensions.ExtensionBase.Maj7,new[]
                 {
                     new ChordExtensions.Extension(9,Accidental.None, ChordExtensions.Extension.ExtensionKind.Add),

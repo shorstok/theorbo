@@ -94,6 +94,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\ScalesRepository.cs" />
     <Compile Include="Services\TelegramBotService.cs" />
     <Compile Include="Config\BotConfiguration.cs" />
     <Compile Include="Config\CurrentUserProtectedString.cs" />
