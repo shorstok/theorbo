@@ -12,7 +12,7 @@ namespace theorbo.MusicTheory.Parsing
             from noteval in Notes.NoteNames.Select(s => Parse.String(s.Key).Select(v => s.Value)).Aggregate((p1, p2) => p1.Or(p2))
             from accidental in Alterations.AccidentalParser.Optional()
             from kind in Alterations.ChordKindParser.Optional()
-            select Tuple.Create(noteval, accidental.GetOrElse(Accidental.None), kind.GetOrElse(KnownChordKind.Maj));
+            select Tuple.Create(noteval, accidental.GetOrElse(Accidental.None), kind.GetOrElse(KnownChordKind.None));
 
         private static readonly Parser<Tuple<NoteValue,Accidental>> ChordInversionParser =
             from chordName in Notes.NoteNames.Select(s => Parse.IgnoreCase("/"+s.Key).Select(v => s.Value)).Aggregate((p1, p2) => p1.Or(p2))
@@ -20,11 +20,11 @@ namespace theorbo.MusicTheory.Parsing
             select Tuple.Create(chordName, accidental.GetOrElse(Accidental.None));
 
         //Resulting parser - matches chord with all extensions
-        public static Parser<ParsedChord> ChordPraser =
+        public static Parser<Chord> ChordPraser =
             from chord in ChordBasePraser
             from ext in ChordExtensions.ExtensionParser.Optional()
             from inversion in  ChordInversionParser.Optional() 
-            select new ParsedChord(chord.Item1,
+            select Chord.FromParseResults(chord.Item1,
                 chord.Item2,
                 chord.Item3,
                 ext.IsEmpty

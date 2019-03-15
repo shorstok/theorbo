@@ -71,6 +71,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MusicTheory\BuiltinScales.cs" />
     <Compile Include="MusicTheory\Domain\Accidental.cs" />
     <Compile Include="MusicTheory\Domain\Chord.cs" />
     <Compile Include="MusicTheory\Domain\Interval.cs" />

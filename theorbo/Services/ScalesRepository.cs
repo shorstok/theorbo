@@ -10,7 +10,9 @@ namespace theorbo.Services
 {
     public class ScalesRepository
     {
-        private IanringSource _ianringSource = new IanringSource();
-
+        public Scale GetStandardDiatonicScale(Note root, bool isMinor)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

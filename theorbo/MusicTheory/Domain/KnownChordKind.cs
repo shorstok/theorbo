@@ -2,6 +2,7 @@
 {
     public enum KnownChordKind
     {
+        None,
         Min,
         Maj,
         Aug,
