@@ -6,7 +6,7 @@ using theorbo.MusicTheory.Domain;
 
 namespace theorbo.MusicTheory.Parsing
 {
-    public static partial class Chords
+    public static class Chords
     {        
         public static Parser<Tuple<NoteValue, Accidental, KnownChordKind>> ChordBasePraser =
             from noteval in Notes.NoteNames.Select(s => Parse.String(s.Key).Select(v => s.Value)).Aggregate((p1, p2) => p1.Or(p2))
@@ -24,7 +24,7 @@ namespace theorbo.MusicTheory.Parsing
             from chord in ChordBasePraser
             from ext in ChordExtensions.ExtensionParser.Optional()
             from inversion in  ChordInversionParser.Optional() 
-            select Chord.FromParseResults(chord.Item1,
+            select ChordOrigin.FromParseResults(chord.Item1,
                 chord.Item2,
                 chord.Item3,
                 ext.IsEmpty
@@ -33,6 +33,6 @@ namespace theorbo.MusicTheory.Parsing
                 ext.IsEmpty
                     ? new List<ChordExtensions.Extension>()
                     : ext.Get().Item2,
-                inversion.GetOrElse(null));
+                inversion.GetOrElse(null)).BuildChord();
     }
 }

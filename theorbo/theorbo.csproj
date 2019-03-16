@@ -74,6 +74,7 @@
     <Compile Include="MusicTheory\BuiltinScales.cs" />
     <Compile Include="MusicTheory\Domain\Accidental.cs" />
     <Compile Include="MusicTheory\Domain\Chord.cs" />
+    <Compile Include="MusicTheory\Domain\ChordOrigin.cs" />
     <Compile Include="MusicTheory\Domain\Interval.cs" />
     <Compile Include="MusicTheory\Domain\KnownChordKind.cs" />
     <Compile Include="MusicTheory\Domain\Note.cs" />
@@ -85,7 +86,6 @@
     <Compile Include="MusicTheory\Parsing\Alterations.cs" />
     <Compile Include="MusicTheory\Parsing\ChordExtensions.cs" />
     <Compile Include="MusicTheory\Parsing\Chords.cs" />
-    <Compile Include="MusicTheory\Parsing\Chords.ParsedChord.cs" />
     <Compile Include="MusicTheory\Parsing\Degrees.cs" />
     <Compile Include="MusicTheory\Parsing\Degrees.ParsedDegree.cs" />
     <Compile Include="MusicTheory\Parsing\Notes.cs" />

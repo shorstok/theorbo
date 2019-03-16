@@ -1,43 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
-using theorbo.MusicTheory.Parsing;
+using System.Linq;
 
 namespace theorbo.MusicTheory.Domain
 {
-    public class Chord
+    public class Chord : IEquatable<Chord>
     {
-        public Note RootNote { get; private set; }
-        public KnownChordKind? ChordKind { get; private set; } = null;
-        public ChordExtensions.ExtensionBase ExtensionBase { get; private set;}
-        public IEnumerable<ChordExtensions.Extension> Extensions { get;private set; }
-        public Note BassNoteOrInversion { get;private set; }
+        public Note RootNote { get; }
+        public IList<Interval> Factors { get; }
 
-        public IList<Interval> Factors { get; private set; }
+        public ChordOrigin Origin { get; } 
 
-        public static Chord FromParseResults(NoteValue root,
-            Accidental accidental,
-            KnownChordKind knownChordKind,
-            ChordExtensions.ExtensionBase extensionBase,
-            IEnumerable<ChordExtensions.Extension> extensions,
-            Tuple<NoteValue, Accidental> inversionOrBass)
+        public Chord(ChordOrigin origin)
         {
-            var result = new Chord
+            Origin = origin;
+            RootNote = origin.Root;
+
+
+        }
+
+        #region Equality
+
+        public bool Equals(Chord other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(RootNote, other.RootNote) && 
+                   (ReferenceEquals(Factors, other.Factors) || (Factors?.SequenceEqual(other.Factors) ?? false));
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Chord) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
             {
-                ChordKind = knownChordKind,
-                Extensions = extensions,
-                ExtensionBase = extensionBase,
-                RootNote = new Note(root,accidental),                
-                BassNoteOrInversion = inversionOrBass !=null? new Note(inversionOrBass.Item1,inversionOrBass.Item2) : null               
-            };
-
-            result.AddFactors(extensions);
-
-            return result;
+                return ((RootNote != null ? RootNote.GetHashCode() : 0) * 397) ^ (Factors != null ? Factors.GetHashCode() : 0);
+            }
         }
 
-        private void AddFactors(IEnumerable<ChordExtensions.Extension> extensions)
-        {
-            
-        }
+        public static bool operator ==(Chord left, Chord right) => Equals(left, right);
+        public static bool operator !=(Chord left, Chord right) => !Equals(left, right);
+
+        #endregion
+
     }
 }

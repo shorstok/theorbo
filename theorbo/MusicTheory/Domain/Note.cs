@@ -9,14 +9,14 @@ namespace theorbo.MusicTheory.Domain
 
         public int MidiValue { get; }
 
-        public int Octave => (MidiValue - C0Midi) / 12;
-        public NoteValue NoteValue => (NoteValue) (MidiValue%12);
+        public int Octave => (MidiValue - C0Midi) / Interval.SemitonesInOctave;
+        public NoteValue NoteValue => (NoteValue) (MidiValue%Interval.SemitonesInOctave);
 
         public Note(NoteValue value, Accidental accidental = Accidental.None) => 
             MidiValue = (int) (MiddleCMidi + value + AccidentalToSemitones(accidental));
 
         public Note(NoteValue value, Accidental accidental, int octave) => 
-            MidiValue = (int) (C0Midi + octave * 12 + value + AccidentalToSemitones(accidental));
+            MidiValue = (int) (C0Midi + octave * Interval.SemitonesInOctave + value + AccidentalToSemitones(accidental));
 
         public Note(int midiNoteValue) => MidiValue = midiNoteValue;
 
@@ -46,7 +46,7 @@ namespace theorbo.MusicTheory.Domain
         public Note Transpose(int semitones) => 
             new Note(MidiValue + semitones);
 
-        public Note UpAnOctave() => Transpose(12);
+        public Note UpAnOctave() => Transpose(Interval.SemitonesInOctave);
 
         public override string ToString()
         {

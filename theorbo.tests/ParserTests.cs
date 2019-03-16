@@ -133,10 +133,10 @@ namespace theorbo.tests
         [Test]
         public void ShouldParseChords()
         {
-            var testData = new Dictionary<string, Chords.ParsedChord>
+            var testData = new Dictionary<string, Chord>
             {
-                ["Bbmaj7"] = new Chords.ParsedChord(NoteValue.B, Accidental.Flat, KnownChordKind.Maj, ChordExtensions.ExtensionBase.Maj7, new ChordExtensions.Extension[0], null),
-                ["Bbmaj7/9"] = new Chords.ParsedChord(NoteValue.B,
+                ["Bbmaj7"] = ChordOrigin.FromParseResults(NoteValue.B, Accidental.Flat, KnownChordKind.Maj, ChordExtensions.ExtensionBase.Maj7, new ChordExtensions.Extension[0], null).BuildChord(),
+                ["Bbmaj7/9"] = ChordOrigin.FromParseResults(NoteValue.B,
                     Accidental.Flat,
                     KnownChordKind.Maj,
                     ChordExtensions.ExtensionBase.Maj7,
@@ -146,14 +146,14 @@ namespace theorbo.tests
                             Accidental.None,
                             ChordExtensions.Extension.ExtensionKind.Add),
                     },
-                    null),
-                ["A#7/F"] = new Chords.ParsedChord(NoteValue.A,
+                    null).BuildChord(),
+                ["A#7/F"] = ChordOrigin.FromParseResults(NoteValue.A,
                     Accidental.Sharp,
                     KnownChordKind.Maj,
                     new ChordExtensions.ExtensionBase(7,false,true), 
                     new ChordExtensions.Extension[0], 
-                    Tuple.Create(NoteValue.F, Accidental.None)),
-                ["Ebm5#13-3omitb5/F#"] = new Chords.ParsedChord(NoteValue.E,
+                    Tuple.Create(NoteValue.F, Accidental.None)).BuildChord(),
+                ["Ebm5#13-3omitb5/F#"] = ChordOrigin.FromParseResults(NoteValue.E,
                     Accidental.Flat,
                     KnownChordKind.Min,
                     ChordExtensions.ExtensionBase.Powerchord,
@@ -163,7 +163,7 @@ namespace theorbo.tests
                         new ChordExtensions.Extension(3,Accidental.Flat, ChordExtensions.Extension.ExtensionKind.Add),
                         new ChordExtensions.Extension(5,Accidental.Flat, ChordExtensions.Extension.ExtensionKind.Omit),
                     },
-                    Tuple.Create(NoteValue.F, Accidental.Sharp)),
+                    Tuple.Create(NoteValue.F, Accidental.Sharp)).BuildChord(),
             };
             
             //Parse all valid degree notation cases 
