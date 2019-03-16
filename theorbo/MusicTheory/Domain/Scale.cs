@@ -6,6 +6,7 @@ namespace theorbo.MusicTheory.Domain
 {
     public class Scale
     {
+        private readonly int _scaleLength;
         public Note Root { get; }
         public Interval[] Tones { get; }
 
@@ -13,6 +14,8 @@ namespace theorbo.MusicTheory.Domain
         {
             Tones = tones;
             Root = root;
+
+            _scaleLength = Tones.Sum(s => s.Semitones);
         }
 
         public static Scale FromSteps(params int[] steps)
@@ -25,12 +28,14 @@ namespace theorbo.MusicTheory.Domain
             if(value < 1)
                 throw new ArgumentOutOfRangeException(nameof(value));
 
+            var loopCount = value / (Tones.Length + 1);
             value = value % (Tones.Length + 1)-1;
 
             if (value == 0)            
                 return Interval.Unity.ApplyAccidental(accidental);
 
             var delta = Tones.Take(value).Sum(s => s.Semitones);
+            delta += _scaleLength * loopCount;
 
             return Interval.FromSemitones(delta + Note.AccidentalToSemitones(accidental));
         }

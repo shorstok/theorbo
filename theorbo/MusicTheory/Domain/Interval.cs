@@ -28,10 +28,32 @@ namespace theorbo.MusicTheory.Domain
         {
             Semitones = semitones;
         }
-        
-        //todo: use major scale as reference
-        public static Interval FromQuality(Quality quality, int value) => 
-            throw new NotImplementedException();
+              
+        public static Interval FromQuality(Quality quality, int value)
+        {
+            var degree = BuiltinScales.Major.GetScaleDegree(value,Accidental.None);
+ 
+            switch (quality)
+            {
+                case Quality.Major:
+                case Quality.Perfect:
+                    return degree;
+                case Quality.Minor:
+                    return degree.ApplyAccidental(Accidental.Flat);
+                case Quality.Diminished:
+                    return BuiltinScales.Major.GetScaleDegree(value-1, Accidental.None).
+                        AddSemitones(value % 7 == 5 ? 1 : 0);
+                case Quality.Augmented:
+                    return degree.ApplyAccidental(Accidental.Sharp);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(quality), quality, null);
+            }
+        }
+
+        public Interval AddSemitones(int quantity)
+        {
+            return new Interval(Semitones + quantity);
+        }
 
         public static Interval FromChordExtension(int value, Accidental accidental) => 
             BuiltinScales.Mixolydian.GetScaleDegree(value, accidental);
